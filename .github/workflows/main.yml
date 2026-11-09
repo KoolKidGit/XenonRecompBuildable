@@ -3,15 +3,12 @@ on: workflow_dispatch
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           submodules: recursive
-
-      - name: Setup CMake
-        uses: jwlawrence/actions-setup-cmake@v1
 
       - name: Configure CMake
         run: cmake -B build -DCMAKE_BUILD_TYPE=Release
@@ -22,5 +19,5 @@ jobs:
       - name: Upload Executable
         uses: actions/upload-artifact@v4
         with:
-          name: XenonRecomp-Windows
-          path: build/Release/
+          name: XenonRecomp-Linux
+          path: build/
