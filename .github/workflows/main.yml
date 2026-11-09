@@ -1,9 +1,9 @@
-name: Build XenonRecomp
+name: Build XenonRecomp Windows
 on: workflow_dispatch
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -11,20 +11,13 @@ jobs:
           submodules: recursive
 
       - name: Configure CMake with Clang
-        run: |
-          sudo apt-get update && sudo apt-get install -y clang
-          cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang
+        run: cmake -B build -T ClangCL -DCMAKE_BUILD_TYPE=Release
 
       - name: Build Tool
         run: cmake --build build --config Release
 
-      - name: Create Artifact Directory
-        run: |
-          mkdir -p dist
-          find build -type f -executable -exec cp {} dist/ \; || true
-
       - name: Upload Executable
         uses: actions/upload-artifact@v4
         with:
-          name: XenonRecomp-Linux
-          path: dist/
+          name: XenonRecomp-Windows
+          path: build/Release/
