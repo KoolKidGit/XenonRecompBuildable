@@ -10,14 +10,21 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Configure CMake
-        run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+      - name: Configure CMake with Clang
+        run: |
+          sudo apt-get update && sudo apt-get install -y clang
+          cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang
 
       - name: Build Tool
         run: cmake --build build --config Release
+
+      - name: Create Artifact Directory
+        run: |
+          mkdir -p dist
+          find build -type f -executable -exec cp {} dist/ \; || true
 
       - name: Upload Executable
         uses: actions/upload-artifact@v4
         with:
           name: XenonRecomp-Linux
-          path: build/
+          path: dist/
